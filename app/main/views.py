@@ -278,7 +278,7 @@ def moderate_disable(id):
                             page=request.args.get('page', 1, type=int)))
 
 
-@main.route('/feedback')
+@main.route('/feedback',methods=['GET','POST'])
 @login_required
 @permission_required(Permission.WRITE)
 def feedback():
