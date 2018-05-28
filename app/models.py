@@ -95,6 +95,7 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     avatar_hash = db.Column(db.String(32))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
+    feedbacks = db.relationship('Feedback',backref='author',lazy='dynamic')
     followed = db.relationship('Follow',
                                foreign_keys=[Follow.follower_id],
                                backref=db.backref('follower', lazy='joined'),
@@ -407,4 +408,4 @@ class Feedback(db.Model):
         return Post(body=body)
 
 
-db.event.listen(Post.body, 'set', Post.on_changed_body)
+db.event.listen(Feedback.body, 'set', Feedback.on_changed_body)
