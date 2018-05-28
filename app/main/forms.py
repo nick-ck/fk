@@ -59,3 +59,10 @@ class PostForm(FlaskForm):
 class CommentForm(FlaskForm):
     body = StringField('Enter your comment', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+class FeedbackForm(FlaskForm):
+    category=StringField('问题类别',validators=[DataRequired()])
+    title=StringField('标题',validators=[DataRequired()])
+    shop=StringField('门店',validators=[DataRequired()])
+    body=PageDownField('问题描述',validators=[DataRequired()])
+    submit=SubmitField('提交')

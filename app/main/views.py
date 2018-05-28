@@ -4,9 +4,9 @@ from flask_login import login_required, current_user
 from flask_sqlalchemy import get_debug_queries
 from . import main
 from .forms import EditProfileForm, EditProfileAdminForm, PostForm,\
-    CommentForm
+    CommentForm,FeedbackForm
 from .. import db
-from ..models import Permission, Role, User, Post, Comment
+from ..models import Permission, Role, User, Post, Comment,Feedback
 from ..decorators import admin_required, permission_required
 
 
@@ -276,3 +276,16 @@ def moderate_disable(id):
     db.session.commit()
     return redirect(url_for('.moderate',
                             page=request.args.get('page', 1, type=int)))
+
+
+@main.route('/feedback')
+@login_required
+@permission_required(Permission.WRITE)
+def feedback():
+    form=FeedbackForm()
+    if form.validate_on_submit():
+        fb=Feedback(category=form.category.data,title=form.title.data,\
+                    body=form.body.data,author=current_user._get_current_object())
+        db.session.add(fb)
+        db.session.commit()
+    return render_template('feedback.html',form=form)

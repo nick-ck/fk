@@ -365,3 +365,46 @@ class Comment(db.Model):
 
 
 db.event.listen(Comment.body, 'set', Comment.on_changed_body)
+
+class Feedback(db.Model):
+    __tablename__='feedbacks'
+    id=db.Column(db.Integer,primary_key=True)
+    category=db.Column(db.String(64))
+    title=db.Column(db.String(64))
+    shop=db.Column(db.String(64))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    body=db.Column(db.Text)
+    body_html=db.Column(db.Text)
+    author_id=db.Column(db.Integer,db.ForeignKey('users.id'))
+
+
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
+                        'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
+                        'h1', 'h2', 'h3', 'p']
+        target.body_html = bleach.linkify(bleach.clean(
+            markdown(value, output_format='html'),
+            tags=allowed_tags, strip=True))
+
+    def to_json(self):
+        json_post = {
+            'url': url_for('api.get_post', id=self.id),
+            'title':self.title,
+            'shop':self.shop,
+            'body': self.body,
+            'body_html': self.body_html,
+            'timestamp': self.timestamp,
+            'author_url': url_for('api.get_user', id=self.author_id),
+        }
+        return json_post
+
+    @staticmethod
+    def from_json(json_post):
+        body = json_post.get('body')
+        if body is None or body == '':
+            raise ValidationError('post does not have a body')
+        return Post(body=body)
+
+
+db.event.listen(Post.body, 'set', Post.on_changed_body)
