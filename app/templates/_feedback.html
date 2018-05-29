@@ -23,9 +23,6 @@
                 <a href="{{ url_for('.feedback', id=feedback.id) }}">
                     <span class="label label-default">Permalink</span>
                 </a>
-                <a href="{{ url_for('.feedback', id=feedback.id) }}#comments">
-                    <span class="label label-primary">{{ feedback.comments.count() }} Comments</span>
-                </a>
             </div>
         </div>
     </li>
