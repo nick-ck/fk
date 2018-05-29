@@ -294,7 +294,7 @@ def feedback():
         form.title.data=''
         form.body.data=''
         form.shop.data=''
-        return redirect(url_for('.feedbacks',feedbacks=feedbacks))
+        return redirect(url_for('.feedbacks'))
     return render_template('feedback.html',form=form)
 
 @main.route('/feedbacks')
