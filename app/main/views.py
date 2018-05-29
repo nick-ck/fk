@@ -285,7 +285,19 @@ def feedback():
     form=FeedbackForm()
     if form.validate_on_submit():
         fb=Feedback(category=form.category.data,title=form.title.data,\
-                    body=form.body.data)
+                    body=form.body.data,shop=form.shop.data)
         db.session.add(fb)
         db.session.commit()
+        flash('您的需求已提交')
+        form.category.data=''
+        form.title.data=''
+        form.body.data=''
+        form.shop.data=''
+        return redirect()
     return render_template('feedback.html',form=form)
+
+@main.route('/feedbacks')
+@login_required
+def feedbacks():
+    feedbacks=Feedback.query.order_by(Feedback.timestamp.desc()).all()
+    return render_template('feedbacks.html',feedbacks=feedbacks)

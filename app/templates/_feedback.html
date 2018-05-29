@@ -1,0 +1,39 @@
+<ul class="feedbacks">
+    {% for feedback in feedbacks %}
+    <li class="feedback">
+        <div class="feedback-thumbnail">
+            <a href="{{ url_for('.user', username=feedback.author.username) }}">
+                <img class="img-rounded profile-thumbnail" src="{{ feedback.author.gravatar(size=40) }}">
+            </a>
+        </div>
+        <div class="feedback-content">
+            <div class="feedback-date">{{ moment(feedback.timestamp).fromNow() }}</div>
+            <div class="feedback-author"><a href="{{ url_for('.user', username=feedback.author.username) }}">{{ feedback.author.username }}</a></div>
+            <div class="feedback-body">
+                {% if feedback.body_html %}
+                    {{ feedback.body_html | safe }}
+                {% else %}
+                    {{ feedback.body }}
+                {% endif %}
+            </div>
+            <div class="feedback-footer">
+                {% if current_user == feedback.author %}
+                <a href="{{ url_for('.edit', id=feedback.id) }}">
+                    <span class="label label-primary">Edit</span>
+                </a>
+                {% elif current_user.is_administrator() %}
+                <a href="{{ url_for('.edit', id=feedback.id) }}">
+                    <span class="label label-danger">Edit [Admin]</span>
+                </a>
+                {% endif %}
+                <a href="{{ url_for('.feedback', id=feedback.id) }}">
+                    <span class="label label-default">Permalink</span>
+                </a>
+                <a href="{{ url_for('.feedback', id=feedback.id) }}#comments">
+                    <span class="label label-primary">{{ feedback.comments.count() }} Comments</span>
+                </a>
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
