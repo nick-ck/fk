@@ -286,8 +286,7 @@ def feedback():
     form=FeedbackForm()
     if form.validate_on_submit():
         fb=Feedback(category=form.category.data, title=form.title.data, \
-                    body=form.body.data, shop=form.shop.data,\
-                    author=current_user._get_current_object())
+                    body=form.body.data, shop=form.shop.data)
         db.session.add(fb)
         db.session.commit()
         flash('您的需求已提交')
