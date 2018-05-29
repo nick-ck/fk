@@ -1,11 +1,13 @@
 <ul class="feedbacks">
     {% for feedback in feedbacks %}
-    <li class="feedback">
+        <li class="feedback">
+        <!--
         <div class="feedback-thumbnail">
             <a href="{{ url_for('.user', username=feedback.author.username) }}">
                 <img class="img-rounded profile-thumbnail" src="{{ feedback.author.gravatar(size=40) }}">
             </a>
         </div>
+        -->
         <div class="feedback-content">
             <div class="feedback-date">{{ moment(feedback.timestamp).fromNow() }}</div>
             <div class="feedback-author"><a href="{{ url_for('.user', username=feedback.author.username) }}">{{ feedback.author.username }}</a></div>
