@@ -1,3 +1,4 @@
+from IPython.core.release import author
 from flask import render_template, redirect, url_for, abort, flash, request,\
     current_app, make_response
 from flask_login import login_required, current_user
@@ -284,8 +285,9 @@ def moderate_disable(id):
 def feedback():
     form=FeedbackForm()
     if form.validate_on_submit():
-        fb=Feedback(category=form.category.data,title=form.title.data,\
-                    body=form.body.data,shop=form.shop.data)
+        fb=Feedback(category=form.category.data, title=form.title.data, \
+                    body=form.body.data, shop=form.shop.data,\
+                    author=current_user._get_current_object())
         db.session.add(fb)
         db.session.commit()
         flash('您的需求已提交')
@@ -293,7 +295,7 @@ def feedback():
         form.title.data=''
         form.body.data=''
         form.shop.data=''
-        return redirect()
+        return redirect(url_for('.feedbacks.html',feedbacks=feedbacks))
     return render_template('feedback.html',form=form)
 
 @main.route('/feedbacks')
