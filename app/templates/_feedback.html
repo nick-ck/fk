@@ -1,16 +1,21 @@
 <ul class="feedbacks">
     {% for feedback in feedbacks %}
-        <li class="feedback">
-        <div class="feedback-content">
-            <div class="feedback-date">{{ moment(feedback.timestamp).fromNow() }}</div>
-                 <div class="feedback-body">
+        <li class="post">
+         <div class="post-thumbnail">
+            <a href="{{ url_for('.user', username=feedback.author.username) }}">
+                <img class="img-rounded profile-thumbnail" src="{{ feedback.author.gravatar(size=40) }}">
+            </a>
+        </div>
+        <div class="post-content">
+            <div class="post-date">{{ moment(feedback.timestamp).fromNow() }}</div>
+                 <div class="post-body">
                 {% if feedback.body_html %}
                     {{ feedback.body_html | safe }}
                 {% else %}
                     {{ feedback.body }}
                 {% endif %}
             </div>
-            <div class="feedback-footer">
+            <div class="post-footer">
                 {% if current_user == feedback.author %}
                 <a href="{{ url_for('.edit', id=feedback.id) }}">
                     <span class="label label-primary">Edit</span>
